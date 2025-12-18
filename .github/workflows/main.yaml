@@ -28,6 +28,13 @@ jobs:
         id: buildx
         uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db # v3.6.1
 
+      - name: Generate a Github App token
+        id: app-token
+        uses: compute-cloud/shared-pipeline-actions/actions/get_gh_token@main
+        with:
+          app_id: ${{ vars.RUGBYBOT_APP_ID }}
+          rugbybot_app_key: ${{ secrets.RUGBYBOT_APP_KEY }}
+
       - name: Fetch OIDC Token for ECR
         id: fetch-oidc-token
         uses: compute-cloud/shared-pipeline-actions/actions/get_ecr_oidc_token@main
