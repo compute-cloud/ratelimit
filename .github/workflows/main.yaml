@@ -28,9 +28,16 @@ jobs:
         id: buildx
         uses: docker/setup-buildx-action@988b5a0280414f521da01fcc63a27aeeb4b104db # v3.6.1
 
+      - name: Fetch OIDC Token for ECR
+        id: fetch-oidc-token
+        uses: compute-cloud/shared-pipeline-actions/actions/get_ecr_oidc_token@main
+        with:
+          role_to_be_assumed: ${{ env.OIDC_ECR_ROLE }}
+          aws_region: ${{ env.AWS_REGION }}
+          session_duration: 900
+
       - name: build and push docker image
         run: |
-          echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
           VERSION=main make docker_multiarch_push     # Push image tagged with "main"
           make docker_multiarch_push                    # Push image tagged with git sha
         env:
